@@ -1,0 +1,5 @@
+# Verifier Program
+"""
+(a)  Checks validity: each hospital and each student is matched to exactly one partner, with no duplicates.
+ And (b) checks stability: confirms there is no blocking pair.
+"""
