@@ -1,14 +1,22 @@
 import sys
+from collections import deque
 
 def fetch_input(file_name):
     with open(file_name, 'r') as file:
-        n = int(file.readline())
+        line = file.readline()
+        if not line:
+            raise ValueError("Empty input file") # Empty File Edge Case
+        n = int(line)
 
         # Obtain hospital preferences
         hospital_preferences = []
         for _ in range(n):
             row = file.readline().split()
+            if len(row) != n:
+                raise ValueError("Invalid hospital preference row length") # Invalid Row Length Edge Case
             preferences = list(map(int, row))
+            if sorted(preferences) != list(range(1, n+1)):
+                raise ValueError("Invalid hospital preference list") # Invalid Preference List Edge Case
             preferences = [x-1 for x in preferences] # Using zero-based indexing
             hospital_preferences.append(preferences)
 
@@ -16,12 +24,20 @@ def fetch_input(file_name):
         student_preferences = []
         for _ in range(n):
             row = file.readline().split()
+            if len(row) != n:
+                raise ValueError("Invalid student preference row length") # Invalid Row Length Edge Case
             preferences = list(map(int, row))
+            if sorted(preferences) != list(range(1, n+1)):
+                raise ValueError("Invalid student preference list") # Invalid Preference List Edge Case
             preferences = [x-1 for x in preferences] # Using zero-based indexing
             student_preferences.append(preferences)
     return n, hospital_preferences, student_preferences
 
 def gale_shapley(n, hospital_preferences, student_preferences):
+
+    if n == 0:
+        return []  # Edge Case: no hospitals or students
+    
     # -1 for unmatched, 0 is inital next proposal for all hospitals
     hospital_match = [-1] * n
     student_match = [-1] * n
@@ -37,14 +53,16 @@ def gale_shapley(n, hospital_preferences, student_preferences):
         for rank, h in enumerate(student_preferences[s]):
             student_rank[s][h] = rank
     
+    # Updated to a deque for more efficiency
     # List of free hospitals
-    free_hospitals = []
-    for i in range(n):
-        free_hospitals.append(i)
+    free_hospitals = deque(range(n))
     
     # Main loop of Gale-Shapley algorithm
     while free_hospitals:
-        h = free_hospitals.pop(0) # Hospital that proposes
+        h = free_hospitals.popleft() # Hospital that proposes
+        if next_proposal[h] >= n: # Check to avoid over-proposing
+            continue
+
         s = hospital_preferences[h][next_proposal[h]] # Student to propose to
         next_proposal[h] += 1 # Move pointer to next student for hospital h
 
@@ -68,13 +86,20 @@ def gale_shapley(n, hospital_preferences, student_preferences):
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage: python match.py <input_file> <output_file>")
+        print("Usage: python Match.py <input_file> <output_file>")
         return
 
     input_file = sys.argv[1]
     output_file = sys.argv[2]
 
-    n, hospital_preferences, student_preferences = fetch_input(input_file)
+    # n, hospital_preferences, student_preferences = fetch_input(input_file)
+
+    try: # For handling invalid input cases
+        n, hospital_preferences, student_preferences = fetch_input(input_file)
+    except ValueError as e:
+        print(f"INVALID INPUT: {e}")
+        return
+
     matches = gale_shapley(n, hospital_preferences, student_preferences)
 
     # Writing output to file in one-based indexing

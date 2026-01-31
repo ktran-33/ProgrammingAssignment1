@@ -1,18 +1,21 @@
 import sys
+import os
 
-#Get matches and preferences from match.py
-import match
+#Get matches and preferences from Match.py
+sys.path.insert(0, os.path.dirname(__file__))
+import Match as match
 
 def verifier(matches, n, hospital_preferences, student_preferences):
     # Edge Cases
     # Equal Hospitals and Students
     if len(hospital_preferences) != len(student_preferences):
         print("INVALID DIFFERING AMOUNTS OF HOSPITALS AND STUDENTS")
+        return
 
     if n == 0:
         print("VALID STABLE")
         return
-    if not matches:
+    if not matches or any(s == -1 for s in matches):
         print("INVALID NO MATCHES")
         return
 
@@ -76,8 +79,8 @@ def verifier(matches, n, hospital_preferences, student_preferences):
             # Compare values student_ranking[s, h] and student_ranking[s, h'] (from TB)
             # Both prefer each other
             if (student_rank[s][h] < student_rank[s][h_prime]) and (hospital_rank[h][s] < hospital_rank[h][s_prime]):
-                blocking_pair = "Hospital " + {h+1} + ", Student " + {s+1} # not the current partners
-                print("UNSTABLE Example Blocking Pair: ", blocking_pair)
+                blocking_pair = f"Hospital {h+1}, Student {s+1}" # not the current partners
+                print(f"UNSTABLE Example Blocking Pair: {blocking_pair}")
                 return
         
     print("VALID STABLE")
@@ -86,12 +89,18 @@ def verifier(matches, n, hospital_preferences, student_preferences):
         
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python match.py <input_file>")
+        print("Usage: python Verifier.py <input_file>")
         return
     
     input_file = sys.argv[1]
-
-    n, hospital_preferences, student_preferences = match.fetch_input(input_file)
+    
+    # n, hospital_preferences, student_preferences = match.fetch_input(input_file) # commented out to handle invalid input cases
+    try:
+        n, hospital_preferences, student_preferences = match.fetch_input(input_file)
+    except ValueError as e:
+        print(f"INVALID INPUT: {e}")
+        return
+   
     matches = match.gale_shapley(n, hospital_preferences, student_preferences)
 
     verifier(matches, n, hospital_preferences, student_preferences)
