@@ -67,4 +67,4 @@ This command reads the CSV and generates a graph in:
 results/scalability_plot.png  
 
 Our test results yielded the following graph:  
-![alt text](image.png)  
+![Scalability Plot](results/scalability_plot.png)  
