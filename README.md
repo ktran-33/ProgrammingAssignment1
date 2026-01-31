@@ -1,10 +1,11 @@
 # Programming Assignment 1
 UFIDs:  
-89625286  
-75200264
+89625286 - Karla Tran
+75200264 - Daniel Park
 
 ## Overview
-The assignment has been written in Python 3. 
+The assignment has been written in Python 3. To begin, clone the repository:
+https://github.com/ktran-33/ProgrammingAssignment1.git
 
 ## Task A and B Information:
 ### Compile/Build Instructions
