@@ -12,9 +12,12 @@ https://github.com/ktran-33/ProgrammingAssignment1.git
 ### Compile/Build Instructions
 No compilation is required. The assignment was tested in a virtual environment but it may not be strictly necessary.
 
-The commands are  
+The commands are:   
 python3 -m venv venv  
-venv\Scripts\activate  # On Windows
+venv\Scripts\activate  # On Windows  
+
+_(If 'python3' is not working, 'python' can be used instead. This applies for all commands later that uses python3.)_
+
 #### or
 source venv/bin/activate  # On macOS/Linux
 
@@ -53,7 +56,7 @@ For Task C plotting: matplotlib (install via pip install matplotlib)
 
 ## Task C:
 
-The commands I used to plot are the following:  
+The commands we used to plot are the following:  
 
 python3 scripts/benchmark.py  
 
